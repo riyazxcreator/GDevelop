@@ -1,0 +1,43 @@
+void OnCollisionEnter(Collision collision)
+{
+    if (collision.gameObject.tag == "Obstacle")
+    {
+        Debug.Log("Collided with an obstacle!");
+        // Implement game over or other collision behavior
+    }
+}
+public class CarController : MonoBehaviour
+{
+    public float accelerationSpeed = 10f;
+    public float brakingForce = 5f;
+    public float turnSpeed = 50f;
+    private Rigidbody rb;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void FixedUpdate()
+    {
+        // Get input
+        float moveInput = Input.GetAxis("Vertical"); // Forwards/Backwards
+        float turnInput = Input.GetAxis("Horizontal"); // Left/Right
+
+        // Apply acceleration/braking
+        if (moveInput > 0)
+        {
+            rb.AddForce(transform.forward * moveInput * accelerationSpeed, ForceMode.Force);
+        }
+        else if (moveInput < 0)
+        {
+            rb.AddForce(transform.forward * moveInput * brakingForce, ForceMode.Force);
+        }
+
+        // Apply turning
+        if (turnInput != 0)
+        {
+            rb.angularVelocity = new Vector3(0, turnInput * turnSpeed * Time.fixedDeltaTime, 0);
+        }
+    }
+}
